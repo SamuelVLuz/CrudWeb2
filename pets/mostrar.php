@@ -115,6 +115,56 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        .species-manager {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 10%;
+        padding-right: 10%;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+        }
+
+        .species-left {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            width: 40%;
+            min-width: 300px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .species-right {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            width: 35%;
+            min-width: 250px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .species-left form, .species-right form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .species-left select,
+        .species-left input,
+        .species-right input {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
     </style>
 </head>
 <body class="mostrar_body">
@@ -141,7 +191,7 @@
             // estabelece a conexão com o banco de dados
 	        require_once("../conecta.php");
 
-            $sql = "SELECT pets.id AS id_pet, pets.nome AS nome, DATE_FORMAT(pets.nascimento, '%d/%m/%Y') AS nascimento, prontuario, genero, especies.nome AS especie FROM pets JOIN especies ON especies.id = id_especie ORDER BY pets.nome ASC;";
+            $sql = "SELECT pets.id AS id_pet, pets.nome AS nome, DATE_FORMAT(pets.nascimento, '%d/%m/%Y') AS nascimento, prontuario, genero, especie FROM pets JOIN especies ON especies.id = id_especie ORDER BY pets.nome ASC;";
 
             // ao exececutar uma consulta do tipo select, a função mysqli_query retorna um resultset 
             $resultado = mysqli_query($conn, $sql);
@@ -196,8 +246,48 @@
         ?>
 
         <h2 class="mostrar_h2">Espécies</h2>
-        </div>
-    </div>
+        
+            <?php
+        echo("<div class='species-manager'>");
+            // estabelece a conexão com o banco de dados
+	        require_once("../conecta.php");
+
+            $sql = "SELECT id AS id_especie, especie FROM especies ORDER BY especie ASC;";
+
+            $resultado = mysqli_query($conn, $sql);
+
+            if (mysqli_num_rows($resultado) > 0) {
+                
+                echo ('<div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>');
+
+           
+            while ($row = mysqli_fetch_assoc($resultado) ){
+                echo ("<tr>");
+                echo ("<td>" . htmlspecialchars($row["especie"]) . "</td>");
+                echo ("<td><a class='btn btn-edit' href='editar_especie.php?id_especie=" . urlencode($row['id_especie'])) . "'>Editar</a>";
+                echo ("<a class='btn btn-delete' href='excluir_especie.php?id_especie=" . urlencode($row['id_especie'])) . "'>Excluir</a></td>";
+                
+                echo ("</tr>");
+            }
+            
+            echo ("</tbody></table>"); 
+            } else {
+                echo ("<h1>Não há nada para ser exibido</h1>");
+            }
+
+            echo("</div>");
+        echo("<div class='btn-container'><a class='btn btn-add' href='cadastrar_especie.php'>+ Adicionar Especie</a></div>");
+        ?>
+
+        
     <script>
         // javascript para ocultar a div que contém as mensagens de erro
         setTimeout(function() {
