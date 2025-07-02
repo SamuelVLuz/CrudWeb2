@@ -4,7 +4,7 @@
     $usuario = $_POST["usuario"];
     $senha = $_POST["senha"];
 
-    $sql = "SELECT * FROM usuarios WHERE email = '$usuario' AND senha = '$senha'";
+    $sql = "SELECT * FROM usuarios WHERE (email = '$usuario' OR nome = '$usuario') AND senha = '$senha'";
 
     $resultado = mysqli_query($conn, $sql);
 

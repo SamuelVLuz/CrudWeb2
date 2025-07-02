@@ -64,7 +64,9 @@
 
                 ?>
 
-                    <option value="<?= $row['id']?>"><?= $row["especie"] ?></option>
+                    <option value="<?= $row['id']?>" <?= $row['id'] == $especie ? 'selected' : '' ?>>
+                    <?= $row["especie"] ?>
+                    </option>
 
                 <?php
                     endwhile;
